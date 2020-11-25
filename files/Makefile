@@ -4,7 +4,7 @@ all: extract transform load
 extract:
 	echo "Extracting informationmodels..."
 	python3 ./extract_informationmodels.py -o ./tmp/
-    python3 ./extract_mongodata.py -o ./tmp/
+	python3 ./extract_mongodata.py -o ./tmp/
 
 transform:
 	echo "Transforming informationmodels...."
