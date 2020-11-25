@@ -24,4 +24,4 @@ for id_dict in dict_list:
 
 
 with open(args.outputdirectory + 'mongo_infmodels_id.json', 'w', encoding="utf-8") as outfile:
-    json.dump(dumps(ids), outfile, ensure_ascii=False, indent=4)
+    json.dump(ids, outfile, ensure_ascii=False, indent=4)
