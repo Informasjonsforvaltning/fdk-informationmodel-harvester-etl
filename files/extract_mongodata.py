@@ -1,5 +1,4 @@
 import json
-import requests
 import os
 import re
 from pymongo import MongoClient
@@ -12,12 +11,17 @@ args = parser.parse_args()
 connection = MongoClient(f"""mongodb://{os.environ['MONGO_USERNAME']}:{os.environ['MONGO_PASSWORD']}@mongodb:27017/datasetCatalog?authSource=admin&authMechanism=SCRAM-SHA-1""")
 db = connection.informationModelHarvester
 dict_list = list(db.informationmodel.find({}, {"_id": 1}))
-ids = []
+ids = {}
 for id_dict in dict_list:
-    id_str = id_dict["_id"]
+    id_str = id_dict["_id"][2:-2]
     id_str_mod = re.split('/', id_str)[-1]
     id_str_mod_getting_there = re.split('-', id_str_mod)[0]
-    ids.append(id_str_mod_getting_there)
+
+    uriArray = ids[id_str_mod_getting_there]
+    uriArray = uriArray if uriArray else []
+    uriArray.append(id_str)
+    ids[id_str_mod_getting_there] = uriArray
+
 
 with open(args.outputdirectory + 'mongo_infmodels_id.json', 'w', encoding="utf-8") as outfile:
     json.dump(dumps(ids), outfile, ensure_ascii=False, indent=4)
