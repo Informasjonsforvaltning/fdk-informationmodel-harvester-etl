@@ -55,7 +55,10 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
                     transformed[service_code] = "Is OK"
             else:
                 failed[service_code] = "None"
-    return failed
+    failed_transform = args.outputdirectory + "failed_transform.json"
+    with open(failed_transform, 'w', encoding="utf-8") as failed_file:
+        json.dump(failed, failed_file, ensure_ascii=False, indent=4)
+    return transformed
 
     # if informationmodel["_source"].get("serviceType") != "Kontoopplysninger" and dataservice["_source"].get("apiSpecUrl"):
     #     first = dataservice["_source"].get("harvest")["firstHarvested"]
@@ -80,6 +83,7 @@ inputfileName = args.outputdirectory + "informationmodels.json"
 inputfileNameEnh = args.outputdirectory + "informationmodels_enh.json"
 inputfileNameMongo = args.outputdirectory + "mongo_infmodels_id.json"
 outputfileName = args.outputdirectory + "informationmodels_transformed.json"
+
 
 # Transform the organization object to publisher format:
 with open(outputfileName, 'w', encoding="utf-8") as outfile:
