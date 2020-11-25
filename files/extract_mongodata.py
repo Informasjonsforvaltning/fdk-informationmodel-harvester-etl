@@ -13,7 +13,7 @@ db = connection.informationModelHarvester
 dict_list = list(db.informationmodel.find({}, {"_id": 1}))
 ids = {}
 for id_dict in dict_list:
-    id_str = id_dict["_id"][2:-2]
+    id_str = id_dict["_id"]
     id_str_mod = id_str.rpartition('/')[2]
     id_str_mod_getting_there = id_str_mod.partition('-')[0]
 
