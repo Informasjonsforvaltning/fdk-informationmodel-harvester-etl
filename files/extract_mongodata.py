@@ -1,6 +1,7 @@
 import json
 import requests
 import os
+import re
 from pymongo import MongoClient
 import argparse
 from bson.json_util import dumps
@@ -14,7 +15,9 @@ dict_list = list(db.informationmodel.find({}, {"_id": 1}))
 ids = []
 for id_dict in dict_list:
     id_str = id_dict["_id"]
-    ids.append(id_str)
+    id_str_mod = re.split('/', id_str)[-1]
+    id_str_mod_getting_there = re.split('-', id_str_mod)[0]
+    ids.append(id_str_mod_getting_there)
 
 with open(args.outputdirectory + 'mongo_infmodels_id.json', 'w', encoding="utf-8") as outfile:
     json.dump(dumps(ids), outfile, ensure_ascii=False, indent=4)
