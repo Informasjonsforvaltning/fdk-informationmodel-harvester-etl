@@ -1,0 +1,4 @@
+#DValues for prod environment
+NAMESPACE: prod
+ELASTIC_INDEX: imcat_v1
+ELASTIC_INDEX_ENH: imcatenh_v2

@@ -1,0 +1,56 @@
+name: Build and deploy to prod when merged to master
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    name: Deploy to prod environment
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup python environment
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+
+    - name: Setup gcloud CLI
+      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        service_account_email: ${{ secrets.GCP_SA_DIGDIR_FDK_GCR_EMAIL }}
+        service_account_key: ${{ secrets.GCP_SA_DIGDIR_FDK_GCR_KEY }}
+
+    - run: gcloud auth configure-docker
+
+    - name: Build Docker image with GitHub commit sha tag and latest tag
+      run: docker build . -t eu.gcr.io/digdir-fdk-infra/fdk-informationmodel-harvester-etl:latest -t eu.gcr.io/digdir-fdk-infra/fdk-informationmodel-harvester-etl:$GITHUB_SHA
+
+    - name: Publish docker image to Google Cloud
+      run: docker -- push eu.gcr.io/digdir-fdk-infra/fdk-informationmodel-harvester-etl
+
+    - name: Apply Helm template
+      run: |
+        helm repo add fdk-informationmodel-harvester-etl https://informasjonsforvaltning.github.io/fdk-informationmodel-harvester-etl/
+        helm fetch --untar --untardir ./helm fdk-informationmodel-harvester-etl/fdk-informationmodel-harvester-etl
+        helm template --set DOCKER_IMAGE_NAME="eu.gcr.io/digdir-fdk-infra/fdk-informationmodel-harvester-etl:$GITHUB_SHA" -f ./helm-sources/values/prod.yaml ./helm/fdk-informationmodel-harvester-etl/ > ./kubectlapply.yaml
+        chmod o+w ./kubectlapply.yaml
+        cat kubectlapply.yaml
+
+    - name: Get kubeconfig file from GKE
+      uses: machine-learning-apps/gke-kubeconfig@master
+      with:
+        application_credentials: ${{ secrets.DIGDIR_FDK_PROD_AUTODEPLOY }}
+        project_id: digdir-fdk-prod
+        location_zone: europe-north1-a
+        cluster_name: digdir-fdk-prod
+
+    - name: Deploy to prod
+      uses: docker://bitnami/kubectl:latest
+      env:
+        KUBECONFIG: '/github/workspace/.kube/config'
+      with:
+        args: "apply -f ./kubectlapply.yaml --force"
