@@ -21,7 +21,7 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
     transformed = {"Checked": 0}
     for information_model in array:
         uri = information_model["_source"].get("harvestSourceUri")
-        service_code_list = re.findall('schemas(d+)_', uri)
+        service_code_list = re.findall('schemas(\\d+)', uri)
         if len(service_code_list) == 0 or len(service_code_list) > 1:
             transformed[uri] = "Regex failed"
         else:
@@ -38,7 +38,7 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
 
     for information_model in array_enh:
         uri = information_model["_source"].get("harvestSourceUri")
-        service_code_list = re.findall('schemas(d+)_', uri)
+        service_code_list = re.findall('schemas(\\d+)', uri)
         if len(service_code_list) == 0 or len(service_code_list) > 1:
             transformed[uri] = "Regex failed"
         else:
