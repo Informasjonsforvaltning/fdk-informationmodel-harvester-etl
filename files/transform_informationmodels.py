@@ -1,5 +1,5 @@
-import json
-
+ import json
+import re
 import argparse
 
 parser = argparse.ArgumentParser()
@@ -7,39 +7,68 @@ parser.add_argument('-o', '--outputdirectory', help="the path to the directory o
 args = parser.parse_args()
 
 
-def transform(extract):
+def transform(inputfile, inputfileEnh, inputfilMongo):
     # Transforming according to rules in README
-    array = extract["hits"]["hits"]
+    info_models = openfile(inputfile)
+    info_models_enh = openfile(inputfileEnh)
+    mongo_ids = openfile(inputfilMongo)
+
+    array = info_models["hits"]["hits"]
+    array_enh = info_models_enh["hits"]["hits"]
     print(len(array))
-    transformed = {}
-    for dataservice in array:
-        if dataservice["_source"].get("serviceType") != "Kontoopplysninger" and dataservice["_source"].get("apiSpecUrl"):
-            first = dataservice["_source"].get("harvest")["firstHarvested"]
-            dataservice2 = {"doc": {"id": dataservice["_id"],
-                                    "harvest": {"firstHarvested": first,
-                                                "lastHarvested": dataservice["_source"].get("harvest")["lastHarvested"],
-                                                "changed": mapchanged(dataservice["_source"].get("harvest"), first)
-                                                }
-                                    }
-                            }
-            transformed[dataservice["_source"].get("apiSpecUrl")] = dataservice2
-    print("Total to be transformed: ", len(transformed))
+    transformed = {"Checked": 0}
+    for information_model in array:
+        uri = information_model["_source"].get("harvestSourceUri")
+        service_code = re.search('schemas(\\d+)_', uri)
+        mongo_data = mongo_ids.get(service_code)
+        if mongo_data:
+            if len(mongo_data) > 1:
+                transformed[service_code] = "Too many hits"
+            elif len(mongo_data) == 0:
+                transformed[service_code] = "Empty"
+        else:
+            transformed[service_code] = "None"
+        transformed["Checked"] = transformed["Checked"]+1
+
+    for information_model in array_enh:
+        uri = information_model["_source"].get("harvestSourceUri")
+        service_code = re.search('schemas(\\d+)_', uri)
+        mongo_data = mongo_ids.get(service_code)
+        if mongo_data:
+            if len(mongo_data) > 1:
+                transformed[service_code] = "Too many hits"
+            elif len(mongo_data) == 0:
+                transformed[service_code] = "Empty"
+        else:
+            transformed[service_code] = "None"
+        transformed["Checked"] = transformed["Checked"]+1
     return transformed
 
 
-def mapchanged(harvest, first):
-    array = harvest.get("changed") if harvest.get("changed") else []
-    if len(array) > 0:
-        return array
-    else:
-        array.append(first)
-        return array
+        # if informationmodel["_source"].get("serviceType") != "Kontoopplysninger" and dataservice["_source"].get("apiSpecUrl"):
+        #     first = dataservice["_source"].get("harvest")["firstHarvested"]
+        #     dataservice2 = {"doc": {"id": dataservice["_id"],
+        #                             "harvest": {"firstHarvested": first,
+        #                                         "lastHarvested": dataservice["_source"].get("harvest")["lastHarvested"],
+        #                                         "changed": mapchanged(dataservice["_source"].get("harvest"), first)
+        #                                         }
+        #                             }
+        #                     }
+        #     transformed[dataservice["_source"].get("apiSpecUrl")] = dataservice2
+    # print("Total to be transformed: ", len(transformed))
+    # return transformed
 
 
-inputfileName = args.outputdirectory + "dataservices.json"
-outputfileName = args.outputdirectory + "dataservices_metadata.json"
-with open(inputfileName) as json_file:
-    data = json.load(json_file)
-    # Transform the organization object to publihser format:
-    with open(outputfileName, 'w', encoding="utf-8") as outfile:
-        json.dump(transform(data), outfile, ensure_ascii=False, indent=4)
+def openfile(file_name):
+    with open(file_name) as json_file:
+        return json.load(json_file)
+
+
+inputfileName = args.outputdirectory + "informationmodels.json"
+inputfileNameEnh = args.outputdirectory + "informationmodels_enh.json"
+inputfileNameMongo = args.outputdirectory + "mongo_infmodels_id.json"
+outputfileName = args.outputdirectory + "informationmodels_transformed.json"
+
+# Transform the organization object to publisher format:
+with open(outputfileName, 'w', encoding="utf-8") as outfile:
+    json.dump(transform(inputfileName, inputfileNameEnh, inputfileNameMongo), outfile, ensure_ascii=False, indent=4)
