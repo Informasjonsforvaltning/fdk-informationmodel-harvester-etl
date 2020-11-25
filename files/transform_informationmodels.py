@@ -21,9 +21,8 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
     transformed = {"Checked": 0}
     for information_model in array:
         uri = information_model["_source"].get("harvestSourceUri")
-        service_code = re.search('schemas(\\d+)_', uri)
+        service_code = format(re.search('schemas(\\d+)_', uri).group())
         mongo_data = mongo_ids.get(service_code)
-        mongo_data = mongo_data if mongo_data else ""
         if mongo_data:
             if len(mongo_data) > 1:
                 transformed[service_code] = "Too many hits"
@@ -35,7 +34,7 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
 
     for information_model in array_enh:
         uri = information_model["_source"].get("harvestSourceUri")
-        service_code = re.search('schemas(\\d+)_', uri)
+        service_code = format(re.search('schemas(\\d+)_', uri).group())
         mongo_data = mongo_ids.get(service_code)
         if mongo_data:
             if len(mongo_data) > 1:
