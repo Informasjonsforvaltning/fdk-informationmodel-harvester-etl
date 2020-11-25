@@ -7,20 +7,23 @@ parser.add_argument('-o', '--outputdirectory', help="the path to the directory o
 args = parser.parse_args()
 
 
-def transform(inputfile, inputfileEnh, inputfilMongo):
+def transform(inputfile, inputfile_enh, inputfile_mongo):
     # Transforming according to rules in README
     info_models = openfile(inputfile)
-    info_models_enh = openfile(inputfileEnh)
-    mongo_ids = openfile(inputfilMongo)
+    info_models_enh = openfile(inputfile_enh)
+    mongo_ids = openfile(inputfile_mongo)
+    print(mongo_ids)
 
     array = info_models["hits"]["hits"]
     array_enh = info_models_enh["hits"]["hits"]
+
     print(len(array))
     transformed = {"Checked": 0}
     for information_model in array:
         uri = information_model["_source"].get("harvestSourceUri")
         service_code = re.search('schemas(\\d+)_', uri)
         mongo_data = mongo_ids.get(service_code)
+        mongo_data = mongo_data if mongo_data else ""
         if mongo_data:
             if len(mongo_data) > 1:
                 transformed[service_code] = "Too many hits"
