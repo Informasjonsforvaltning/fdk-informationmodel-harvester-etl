@@ -22,9 +22,9 @@ spec:
       containers:
       - env:
           - name: ELASTIC_IMCAT_INDEX
-            value: {{ required "Missing value ELASTIC_IMCAT_INDEX" .Values.NAMESPACE }}
+            value: {{ required "Missing value ELASTIC_IMCAT_INDEX" .Values.ELASTIC_IMCAT_INDEX }}
           - name: ELASTIC_IMCATENH_INDEX
-            value: {{ required "Missing value ELASTIC_IMCATENH_INDEX" .Values.NAMESPACE }}
+            value: {{ required "Missing value ELASTIC_IMCATENH_INDEX" .Values.ELASTIC_IMCATENH_INDEX }}
           - name: MONGO_USERNAME
             valueFrom:
               secretKeyRef:

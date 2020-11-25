@@ -18,12 +18,12 @@ print("Posting to the following url: ", url)
 print("Posting to publisher index the following data:\n", data)
 # Load the publisher by posting the data:
 r = requests.post(url, json=data, headers=headers)
-with open(args.outputdirectory + 'dataservices.json', 'w', encoding="utf-8") as outfile:
+with open(args.outputdirectory + 'informationmodels.json', 'w', encoding="utf-8") as outfile:
     json.dump(r.json(), outfile, ensure_ascii=False, indent=4)
 
 print("Posting to the following url: ", urlenh)
 print("Posting to publisher index the following data:\n", data)
 # Load the publisher by posting the data:
 r = requests.post(urlenh, json=data, headers=headers)
-with open(args.outputdirectory + 'dataservices_enh.json', 'w', encoding="utf-8") as outfile:
+with open(args.outputdirectory + 'informationmodels_enh.json', 'w', encoding="utf-8") as outfile:
     json.dump(r.json(), outfile, ensure_ascii=False, indent=4)
