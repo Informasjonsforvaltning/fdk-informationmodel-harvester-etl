@@ -1,4 +1,4 @@
 #DValues for staging environment
 NAMESPACE: staging
-ELASTIC_INDEX: imcat_v1
-ELASTIC_INDEX_ENH: imcatenh_v1
+ELASTIC_IMCAT_INDEX: imcat_v1
+ELASTIC_IMCAT_INDEX_ENH: imcatenh_v1
