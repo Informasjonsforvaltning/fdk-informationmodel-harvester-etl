@@ -18,7 +18,7 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
     array_enh = info_models_enh["hits"]["hits"]
 
     print(len(array))
-    # transformed = {}
+    transformed = {}
     failed = {}
     for information_model in array:
         uri = information_model["_source"].get("harvestSourceUri")
@@ -33,6 +33,8 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
                     failed[service_code] = "Too many hits"
                 elif len(mongo_data) == 0:
                     failed[service_code] = "Empty"
+                else:
+                    transformed[service_code] = "Is OK"
             else:
                 failed[service_code] = "None"
 
@@ -49,6 +51,8 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
                     failed[service_code] = "Too many hits"
                 elif len(mongo_data) == 0:
                     failed[service_code] = "Empty"
+                else:
+                    transformed[service_code] = "Is OK"
             else:
                 failed[service_code] = "None"
     return failed
