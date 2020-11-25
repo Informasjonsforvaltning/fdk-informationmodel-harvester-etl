@@ -21,28 +21,36 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
     transformed = {"Checked": 0}
     for information_model in array:
         uri = information_model["_source"].get("harvestSourceUri")
-        service_code = re.findall('schemas(d+)_', uri)[0]
-        mongo_data = mongo_ids.get(service_code)
-        if mongo_data:
-            if len(mongo_data) > 1:
-                transformed[service_code] = "Too many hits"
-            elif len(mongo_data) == 0:
-                transformed[service_code] = "Empty"
+        service_code_list = re.findall('schemas(d+)_', uri)
+        if len(service_code_list) == 0 or len(service_code_list) > 1:
+            transformed[uri] = "Regex failed"
         else:
-            transformed[service_code] = "None"
+            service_code = service_code_list[0]
+            mongo_data = mongo_ids.get(service_code)
+            if mongo_data:
+                if len(mongo_data) > 1:
+                    transformed[service_code] = "Too many hits"
+                elif len(mongo_data) == 0:
+                    transformed[service_code] = "Empty"
+            else:
+                transformed[service_code] = "None"
         transformed["Checked"] = transformed["Checked"]+1
 
     for information_model in array_enh:
         uri = information_model["_source"].get("harvestSourceUri")
-        service_code = re.findall('schemas(d+)_', uri)[0]
-        mongo_data = mongo_ids.get(service_code)
-        if mongo_data:
-            if len(mongo_data) > 1:
-                transformed[service_code] = "Too many hits"
-            elif len(mongo_data) == 0:
-                transformed[service_code] = "Empty"
+        service_code_list = re.findall('schemas(d+)_', uri)
+        if len(service_code_list) == 0 or len(service_code_list) > 1:
+            transformed[uri] = "Regex failed"
         else:
-            transformed[service_code] = "None"
+            service_code = service_code_list[0]
+            mongo_data = mongo_ids.get(service_code)
+            if mongo_data:
+                if len(mongo_data) > 1:
+                    transformed[service_code] = "Too many hits"
+                elif len(mongo_data) == 0:
+                    transformed[service_code] = "Empty"
+            else:
+                transformed[service_code] = "None"
         transformed["Checked"] = transformed["Checked"]+1
     return transformed
 
