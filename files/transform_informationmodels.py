@@ -13,6 +13,7 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
     info_models_enh = openfile(inputfile_enh)
     mongo_ids = openfile(inputfile_mongo)
     models_map = openfile("models_map.json")
+    identifier_map = openfile("identifier_map.json")
 
     array = info_models["hits"]["hits"]
     array_enh = info_models_enh["hits"]["hits"]
@@ -45,6 +46,8 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
                     failed[service_code] = "None"
         elif mongo_ids.get(identifier):
             transformed[identifier] = "Is OK (identifier)"
+        elif identifier_map.get(identifier):
+            transformed[identifier] = "Is OK (identifier_map)"
         else:
             failed[identifier] = "Not found in mongo"
 
@@ -72,6 +75,8 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
                     failed[service_code] = "None"
         elif mongo_ids.get(identifier):
             transformed[identifier] = "Is OK (identifier)"
+        elif identifier_map.get(identifier):
+            transformed[identifier] = "Is OK (identifier_map)"
         else:
             failed[identifier] = "Not found in mongo"
 

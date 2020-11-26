@@ -1,0 +1,4 @@
+{
+  "https://ramuzzi.com/informasjonsmodeller#AdresseModell": "https://raw.githubusercontent.com/Informasjonsforvaltning/model-publisher/master/src/model/model-catalog.ttl#AdresseModell",
+  "https://ramuzzi.com/informasjonsmodeller#PersonOgEnhet": "https://raw.githubusercontent.com/Informasjonsforvaltning/model-publisher/master/src/model/model-catalog.ttl#PersonOgEnhet"
+}
