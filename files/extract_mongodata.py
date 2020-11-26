@@ -14,7 +14,7 @@ dict_list = list(db.informationmodel.find({}, {"_id": 1}))
 ids = {}
 for id_dict in dict_list:
     id_str = id_dict["_id"]
-    if "https://fdk-dev-altinn.appspot.com/api/v1/schemas" in id_str:
+    if "https://altinn-model-publisher.digdir.no/" in id_str:
         id_str_mod = id_str.rpartition('/')[2]
         id_str_mod_getting_there = id_str_mod.partition('-')[0]
 
