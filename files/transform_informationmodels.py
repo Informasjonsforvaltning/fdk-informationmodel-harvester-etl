@@ -23,57 +23,58 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
     failed = {}
     for information_model in array:
         uri = information_model["_source"].get("harvestSourceUri")
-        service_code_list = re.findall('schemas(\\d+)', uri)
-        if "https://fdk-dev-altinn.appspot.com/api/v1/schemas" not in uri:
-            identifier = information_model["_source"].get("identifier")
-            if mongo_ids.get(identifier):
-                transformed[identifier] = "Is OK (identifier)"
+        identifier = information_model["_source"].get("identifier")
+        if "https://fdk-dev-altinn.appspot.com/api/v1/schemas" in uri:
+            service_code_list = re.findall('schemas(\\d+)', uri)
+            if len(service_code_list) == 0 or len(service_code_list) > 1:
+                failed[uri] = "Failed to find service code in URI"
             else:
-                failed[identifier] = "Not found in mongo"
-        elif len(service_code_list) == 0 or len(service_code_list) > 1:
-            failed[uri] = "Not altinn-model"
-        else:
-            service_code = service_code_list[0]
-            mongo_data = mongo_ids.get(service_code)
-            if mongo_data:
-                if len(mongo_data) > 1:
-                    if service_code in models_map:
-                        transformed[service_code] = "Is OK (models_map)"
+                service_code = service_code_list[0]
+                mongo_data = mongo_ids.get(service_code)
+                if mongo_data:
+                    if len(mongo_data) > 1:
+                        if service_code in models_map:
+                            transformed[service_code] = "Is OK (models_map)"
+                        else:
+                            failed[service_code] = "Not found in models_map"
+                    elif len(mongo_data) == 0:
+                        failed[service_code] = "Empty"
                     else:
-                        failed[service_code] = "Not found in models_map"
-                elif len(mongo_data) == 0:
-                    failed[service_code] = "Empty"
+                        transformed[service_code] = "Is OK"
                 else:
-                    transformed[service_code] = "Is OK"
-            else:
-                failed[service_code] = "None"
+                    failed[service_code] = "None"
+        elif mongo_ids.get(identifier):
+            transformed[identifier] = "Is OK (identifier)"
+        else:
+            failed[identifier] = "Not found in mongo"
 
     for information_model in array_enh:
         uri = information_model["_source"].get("harvestSourceUri")
-        service_code_list = re.findall('schemas(\\d+)', uri)
-        if "https://fdk-dev-altinn.appspot.com/api/v1/schemas" not in uri:
-            identifier = information_model["_source"].get("identifier")
-            if mongo_ids.get(identifier):
-                transformed[identifier] = "Is OK (identifier)"
+        identifier = information_model["_source"].get("identifier")
+        if "https://fdk-dev-altinn.appspot.com/api/v1/schemas" in uri:
+            service_code_list = re.findall('schemas(\\d+)', uri)
+            if len(service_code_list) == 0 or len(service_code_list) > 1:
+                failed[uri] = "Failed to find service code in URI"
             else:
-                failed[identifier] = "Not found in mongo"
-        elif len(service_code_list) == 0 or len(service_code_list) > 1:
-            failed[uri] = "Not altinn-model"
-        else:
-            service_code = service_code_list[0]
-            mongo_data = mongo_ids.get(service_code)
-            if mongo_data:
-                if len(mongo_data) > 1:
-                    if service_code in models_map:
-                        transformed[service_code] = "Is OK (models_map)"
+                service_code = service_code_list[0]
+                mongo_data = mongo_ids.get(service_code)
+                if mongo_data:
+                    if len(mongo_data) > 1:
+                        if service_code in models_map:
+                            transformed[service_code] = "Is OK (models_map)"
+                        else:
+                            failed[service_code] = "Not found in models_map"
+                    elif len(mongo_data) == 0:
+                        failed[service_code] = "Empty"
                     else:
-                        failed[service_code] = "Not found in models_map"
-                elif len(mongo_data) == 0:
-                    failed[service_code] = "Empty"
+                        transformed[service_code] = "Is OK"
                 else:
-                    transformed[service_code] = "Is OK"
-            else:
-                failed[service_code] = "None"
+                    failed[service_code] = "None"
+        elif mongo_ids.get(identifier):
+            transformed[identifier] = "Is OK (identifier)"
+        else:
+            failed[identifier] = "Not found in mongo"
+
     failed_transform = args.outputdirectory + "failed_transform.json"
     with open(failed_transform, 'w', encoding="utf-8") as failed_file:
         json.dump(failed, failed_file, ensure_ascii=False, indent=4)
