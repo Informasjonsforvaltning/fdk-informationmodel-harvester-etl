@@ -23,10 +23,13 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
     failed = {}
     for information_model in array:
         uri = information_model["_source"].get("harvestSourceUri")
-        identifier = information_model["_source"].get("identifier")
         service_code_list = re.findall('schemas(\\d+)', uri)
-        if mongo_ids.get(identifier):
-            transformed[identifier] = "Is OK (identifier)"
+        if "https://fdk-dev-altinn.appspot.com/api/v1/schemas" not in uri:
+            identifier = information_model["_source"].get("identifier")
+            if mongo_ids.get(identifier):
+                transformed[identifier] = "Is OK (identifier)"
+            else:
+                failed[identifier] = "Not found in mongo"
         elif len(service_code_list) == 0 or len(service_code_list) > 1:
             failed[uri] = "Not altinn-model"
         else:
@@ -47,10 +50,13 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
 
     for information_model in array_enh:
         uri = information_model["_source"].get("harvestSourceUri")
-        identifier = information_model["_source"].get("identifier")
         service_code_list = re.findall('schemas(\\d+)', uri)
-        if mongo_ids.get(identifier):
-            transformed[identifier] = "Is OK (identifier)"
+        if "https://fdk-dev-altinn.appspot.com/api/v1/schemas" not in uri:
+            identifier = information_model["_source"].get("identifier")
+            if mongo_ids.get(identifier):
+                transformed[identifier] = "Is OK (identifier)"
+            else:
+                failed[identifier] = "Not found in mongo"
         elif len(service_code_list) == 0 or len(service_code_list) > 1:
             failed[uri] = "Not altinn-model"
         else:
