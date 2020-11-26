@@ -23,7 +23,7 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
     failed = {}
     for information_model in array:
         uri = information_model["_source"].get("harvestSourceUri")
-        identifier = information_model["_source"].get("identifier")
+        identifier = information_model["_source"].get("uniqueUri")
         if "https://fdk-dev-altinn.appspot.com/api/v1/schemas" in uri:
             service_code_list = re.findall('schemas(\\d+)', uri)
             if len(service_code_list) == 0 or len(service_code_list) > 1:
@@ -50,7 +50,7 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
 
     for information_model in array_enh:
         uri = information_model["_source"].get("harvestSourceUri")
-        identifier = information_model["_source"].get("identifier")
+        identifier = information_model["_source"].get("uniqueUri")
         if "https://fdk-dev-altinn.appspot.com/api/v1/schemas" in uri:
             service_code_list = re.findall('schemas(\\d+)', uri)
             if len(service_code_list) == 0 or len(service_code_list) > 1:
