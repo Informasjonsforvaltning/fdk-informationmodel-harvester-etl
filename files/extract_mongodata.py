@@ -25,5 +25,5 @@ for id_dict in dict_list:
     else:
         ids[id_str] = id_str
 
-with open(args.outputdirectory + 'mongo_infmodels_ids.json', 'w', encoding="utf-8") as outfile:
+with open(args.outputdirectory + 'mongo_infmodels_id.json', 'w', encoding="utf-8") as outfile:
     json.dump(ids, outfile, ensure_ascii=False, indent=4)
