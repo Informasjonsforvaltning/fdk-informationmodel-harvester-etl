@@ -3,7 +3,6 @@ import os
 import re
 from pymongo import MongoClient
 import argparse
-from bson.json_util import dumps
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-o', '--outputdirectory', help="the path to the directory of the output files", required=True)
@@ -14,6 +13,7 @@ dict_list = list(db.informationmodel.find({}, {"_id": 1}))
 ids = {}
 for id_dict in dict_list:
     id_str = id_dict["_id"]
+
     if "https://altinn-model-publisher.digdir.no/" in id_str:
         id_str_mod = id_str.rpartition('/')[2]
         id_str_mod_getting_there = id_str_mod.partition('-')[0]
@@ -25,5 +25,5 @@ for id_dict in dict_list:
     else:
         ids[id_str] = id_str
 
-with open(args.outputdirectory + 'mongo_infmodels_id.json', 'w', encoding="utf-8") as outfile:
+with open(args.outputdirectory + 'mongo_infmodels_ids.json', 'w', encoding="utf-8") as outfile:
     json.dump(ids, outfile, ensure_ascii=False, indent=4)

@@ -1,6 +1,8 @@
 import json
 import re
 import argparse
+from datetime import datetime
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-o', '--outputdirectory', help="the path to the directory of the output files", required=True)
@@ -18,8 +20,8 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
     array = info_models["hits"]["hits"]
     array_enh = info_models_enh["hits"]["hits"]
 
-    print("Number of info_models:" + str(len(array)) + "\n")
-    print("Number of info_models_enh:" + str(len(array_enh)) + "\n")
+    print("Number of info_models:" + str(len(array)))
+    print("Number of info_models_enh:" + str(len(array_enh)))
     transformed = {}
     failed = {}
     for information_model in array:
@@ -35,24 +37,25 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
                 if mongo_data:
                     if len(mongo_data) > 1:
                         if service_code in models_map:
-                            transformed[service_code] = "Is OK (models_map)"
+                            transformed[models_map[service_code]] = fields_to_change(information_model)
                         else:
                             failed[service_code] = "Not found in models_map"
                     elif len(mongo_data) == 0:
                         failed[service_code] = "Empty"
                     else:
-                        transformed[service_code] = "Is OK"
+                        transformed[mongo_data[0]] = fields_to_change(information_model)
                 else:
                     failed[service_code] = "None"
         elif mongo_ids.get(identifier):
-            transformed[identifier] = "Is OK (identifier)"
+            transformed[identifier] = fields_to_change(information_model)
         elif identifier_map.get(identifier):
-            transformed[identifier] = "Is OK (identifier_map)"
+            transformed[identifier_map[identifier]] = fields_to_change(information_model)
         else:
             failed[identifier] = "Not found in mongo"
 
     for information_model in array_enh:
         uri = information_model["_source"].get("harvestSourceUri")
+        harvest = information_model["_source"].get("harvest")
         identifier = information_model["_source"].get("uniqueUri")
         if "https://fdk-dev-altinn.appspot.com/api/v1/schemas" in uri:
             service_code_list = re.findall('schemas(\\d+)', uri)
@@ -64,19 +67,19 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
                 if mongo_data:
                     if len(mongo_data) > 1:
                         if service_code in models_map:
-                            transformed[service_code] = "Is OK (models_map)"
+                            transformed[models_map[service_code]] = fields_to_change(information_model)
                         else:
                             failed[service_code] = "Not found in models_map"
                     elif len(mongo_data) == 0:
                         failed[service_code] = "Empty"
                     else:
-                        transformed[service_code] = "Is OK"
+                        transformed[mongo_data[0]] = fields_to_change(information_model)
                 else:
                     failed[service_code] = "None"
         elif mongo_ids.get(identifier):
-            transformed[identifier] = "Is OK (identifier)"
+            transformed[identifier] = fields_to_change(information_model)
         elif identifier_map.get(identifier):
-            transformed[identifier] = "Is OK (identifier_map)"
+            transformed[identifier_map[identifier]] = fields_to_change(information_model)
         else:
             failed[identifier] = "Not found in mongo"
 
@@ -89,6 +92,16 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
 def openfile(file_name):
     with open(file_name) as json_file:
         return json.load(json_file)
+
+
+def fields_to_change(elastic_information_model):
+    return {"fdkId": elastic_information_model["_id"],
+            "issued": date_string_to_long(elastic_information_model["_source"]["harvest"]["firstHarvested"]),
+            "modified": date_string_to_long(elastic_information_model["_source"]["harvest"]["lastChanged"])}
+
+
+def date_string_to_long(date_string):
+    return f'{int(datetime.fromisoformat(date_string).timestamp())}000'
 
 
 inputfileName = args.outputdirectory + "informationmodels.json"
