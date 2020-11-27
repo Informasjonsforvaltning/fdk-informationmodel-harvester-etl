@@ -37,7 +37,8 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
                 if mongo_data:
                     if len(mongo_data) > 1:
                         if service_code in models_map:
-                            transformed[models_map[service_code]] = fields_to_change(information_model)
+                            key = f'https://altinn-model-publisher.digdir.no/models/{models_map[service_code]["new-id"]}'
+                            transformed[key] = fields_to_change(information_model)
                         else:
                             failed[service_code] = "Not found in models_map"
                     elif len(mongo_data) == 0:
@@ -67,7 +68,8 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
                 if mongo_data:
                     if len(mongo_data) > 1:
                         if service_code in models_map:
-                            transformed[models_map[service_code]] = fields_to_change(information_model)
+                            key = f'https://altinn-model-publisher.digdir.no/models/{models_map[service_code]["new-id"]}'
+                            transformed[key] = fields_to_change(information_model)
                         else:
                             failed[service_code] = "Not found in models_map"
                     elif len(mongo_data) == 0:
