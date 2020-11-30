@@ -20,5 +20,5 @@ with open(args.outputdirectory + 'informationmodels_transformed.json') as transf
         to_be_updated = {"fdkId": str(values["fdkId"]),
                          "issued": bson.Int64(int(values["issued"])),
                          "modified": bson.Int64(int(values["modified"]))}
-        print("To be updated: " + to_be_updated)
+        print("To be updated: " + str(to_be_updated))
         print(db.datasources.find_one_and_update({'_id': mongo_id},  {'$set': to_be_updated}))
