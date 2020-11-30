@@ -11,7 +11,7 @@ args = parser.parse_args()
 connection = MongoClient(f"""mongodb://{os.environ['MONGO_USERNAME']}:{os.environ['MONGO_PASSWORD']}@mongodb:27017/datasetCatalog?authSource=admin&authMechanism=SCRAM-SHA-1""")
 db = connection.informationModelHarvester
 
-with open(args.outputdirectory + 'informationmodels_tranformed.json') as transformed_file:
+with open(args.outputdirectory + 'informationmodels_transformed.json') as transformed_file:
     transformed_json = json.load(transformed_file)
     for mongo_id in transformed_json:
         values = transformed_json[mongo_id]
