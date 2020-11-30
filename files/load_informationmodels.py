@@ -15,8 +15,10 @@ db = connection.informationModelHarvester
 with open(args.outputdirectory + 'informationmodels_transformed.json') as transformed_file:
     transformed_json = json.load(transformed_file)
     for mongo_id in transformed_json:
+        print("Mongo_id: " + mongo_id)
         values = transformed_json[mongo_id]
-        to_be_updated = {"fdkId": values["fdkId"],
+        to_be_updated = {"fdkId": str(values["fdkId"]),
                          "issued": bson.Int64(int(values["issued"])),
                          "modified": bson.Int64(int(values["modified"]))}
-        db.datasources.find_one_and_update({'_id': mongo_id},  {'$set': to_be_updated})
+        print("To be updated: " + to_be_updated)
+        print(db.datasources.find_one_and_update({'_id': mongo_id},  {'$set': to_be_updated}))
