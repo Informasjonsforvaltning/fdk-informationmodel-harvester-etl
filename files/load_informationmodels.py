@@ -21,8 +21,7 @@ with open(args.outputdirectory + 'informationmodels_transformed.json') as transf
                          "issued": bson.Int64(int(values["issued"])),
                          "modified": bson.Int64(int(values["modified"]))}
         print("To be updated: " + str(to_be_updated))
-        print(db.informationmodels.find_one_and_update({'_id': mongo_id},  {'$set': to_be_updated}))
-        # print(db.informationmodels.find_one_and_update({'_id': mongo_id},  {'$set': {"issued": bson.Int64(int(values["issued"
-        # print(db.informationmodels.find_one_and_update({'_id': mongo_id},  {'$set': {"fdkId": str(values["fdkId"])}}))
-        # print(db.informationmodels.find_one_and_update({'_id': mongo_id},  {'$set': {"issued": bson.Int64(int(values["issued"]))}}))
-        # print(db.informationmodels.find_one_and_update({'_id': mongo_id},  {'$set': {"modified": bson.Int64(int(values["modified"]))}}))
+        # print(db.informationmodels.find_one_and_update({'_id': mongo_id},  {'$set': to_be_updated}))
+        print(db.informationmodels.find_one_and_update({'_id': mongo_id},  {'$set': {"fdkId": str(values["fdkId"])}}))
+        print(db.informationmodels.find_one_and_update({'_id': mongo_id},  {'$set': {"issued": bson.Int64(int(values["issued"]))}}))
+        print(db.informationmodels.find_one_and_update({'_id': mongo_id},  {'$set': {"modified": bson.Int64(int(values["modified"]))}}))
