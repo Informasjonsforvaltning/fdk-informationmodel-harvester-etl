@@ -2,6 +2,7 @@ import json
 import re
 import argparse
 from datetime import datetime
+import os
 
 
 parser = argparse.ArgumentParser()
@@ -15,7 +16,7 @@ def transform(inputfile, inputfile_enh, inputfile_mongo):
     info_models_enh = openfile(inputfile_enh)
     mongo_ids = openfile(inputfile_mongo)
     models_map = openfile("models_map.json")
-    identifier_map = openfile("identifier_map.json")
+    identifier_map = openfile(f"identifier_map_{ os.environ['NAMESPACE']}.json")
 
     array = info_models["hits"]["hits"]
     array_enh = info_models_enh["hits"]["hits"]
