@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    fdk.service: fdk-informationmodel-harvester-etl
+  name: fdk-informationmodel-harvester-etl
+  namespace: {{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      fdk.service: fdk-informationmodel-harvester-etl
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        fdk.service: fdk-informationmodel-harvester-etl
+    spec:
+      containers:
+      - env:
+          - name: ELASTIC_IMCAT_INDEX
+            value: {{ required "Missing value ELASTIC_IMCAT_INDEX" .Values.ELASTIC_IMCAT_INDEX }}
+          - name: ELASTIC_IMCATENH_INDEX
+            value: {{ required "Missing value ELASTIC_IMCATENH_INDEX" .Values.ELASTIC_IMCATENH_INDEX }}
+          - name: MONGO_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mongo-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+                key: MONGO_USERNAME
+          - name: MONGO_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mongo-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+                key: MONGO_PASSWORD
+          - name: INFORMATIONMODEL_HARVESTER_BASE_URI
+            valueFrom:
+              secretKeyRef:
+                name: commonurl-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+                key: FDK_INFORMATIONMODEL_HARVESTER_BASE_URI
+          - name: FDK_INFORMATIONMODEL_HARVESTER_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: common-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+                key: FDK_INFORMATIONMODEL_HARVESTER_API_KEY
+          - name: NAMESPACE
+            valueFrom:
+              secretKeyRef:
+                name: common-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+                key: NAMESPACE
+        image: {{ required "Missing value DOCKER_IMAGE_NAME" .Values.DOCKER_IMAGE_NAME }}
+        imagePullPolicy: Always
+        name: fdk-informationmodel-harvester-etl
+        resources:
+          requests:
+            memory: {{ required "Missing value FDK_INFORMATIONMODEL_HARVESTER_ETL_MEMORY" .Values.FDK_INFORMATIONMODEL_HARVESTER_ETL_MEMORY | quote }}
+      restartPolicy: Always
+status: {}

@@ -1,0 +1,6 @@
+# Default values for fdk-informationmodel-harvester-etl.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+##fdk-informationmodel-harvester-etl
+FDK_INFORMATIONMODEL_HARVESTER_ETL_MEMORY: "1000Mi"
