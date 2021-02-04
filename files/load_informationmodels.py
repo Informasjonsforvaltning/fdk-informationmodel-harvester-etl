@@ -17,21 +17,19 @@ with open(args.outputdirectory + 'mongo_infmodels.json') as extracted_file:
     for model in extracted_json:
         mongo_id = model["_id"]
         print("Mongo_id: " + mongo_id)
-        values = extracted_json[mongo_id]
-        to_be_updated = {"fdkId": str(values["fdkId"]),
-                         "issued": bson.Int64(int(values["issued"])),
-                         "modified": bson.Int64(int(values["modified"]))}
+        to_be_updated = {"fdkId": str(model["fdkId"]),
+                         "issued": bson.Int64(int(model["issued"])),
+                         "modified": bson.Int64(int(model["modified"]))}
         print("To be updated: " + str(to_be_updated))
         print(db.informationModelMeta.find_one_and_update({'_id': mongo_id},  {'$set': to_be_updated}))
 
 with open(args.outputdirectory + 'mongo_catalogs.json') as extracted_file:
     extracted_json = json.load(extracted_file)
-    for model in extracted_json:
-        mongo_id = model["_id"]
+    for catalog in extracted_json:
+        mongo_id = catalog["_id"]
         print("Mongo_id: " + mongo_id)
-        values = extracted_json[mongo_id]
-        to_be_updated = {"fdkId": str(values["fdkId"]),
-                         "issued": bson.Int64(int(values["issued"])),
-                         "modified": bson.Int64(int(values["modified"]))}
+        to_be_updated = {"fdkId": str(catalog["fdkId"]),
+                         "issued": bson.Int64(int(catalog["issued"])),
+                         "modified": bson.Int64(int(catalog["modified"]))}
         print("To be updated: " + str(to_be_updated))
         print(db.catalogMeta.find_one_and_update({'_id': mongo_id},  {'$set': to_be_updated}))
