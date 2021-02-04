@@ -14,7 +14,8 @@ db = connection.informationModelHarvester
 
 with open(args.outputdirectory + 'mongo_infmodels.json') as extracted_file:
     extracted_json = json.load(extracted_file)
-    for mongo_id in extracted_json:
+    for model in extracted_json:
+        mongo_id = model["_id"]
         print("Mongo_id: " + mongo_id)
         values = extracted_json[mongo_id]
         to_be_updated = {"fdkId": str(values["fdkId"]),
@@ -25,7 +26,8 @@ with open(args.outputdirectory + 'mongo_infmodels.json') as extracted_file:
 
 with open(args.outputdirectory + 'mongo_catalogs.json') as extracted_file:
     extracted_json = json.load(extracted_file)
-    for mongo_id in extracted_json:
+    for model in extracted_json:
+        mongo_id = model["_id"]
         print("Mongo_id: " + mongo_id)
         values = extracted_json[mongo_id]
         to_be_updated = {"fdkId": str(values["fdkId"]),
