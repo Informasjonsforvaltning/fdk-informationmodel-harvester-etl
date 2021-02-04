@@ -10,21 +10,11 @@ args = parser.parse_args()
 connection = MongoClient(
     f"""mongodb://{os.environ['MONGO_USERNAME']}:{os.environ['MONGO_PASSWORD']}@mongodb:27017/datasetCatalog?authSource=admin&authMechanism=SCRAM-SHA-1""")
 db = connection.informationModelHarvester
-dict_list = list(db.informationmodel.find({}, {"_id": 1}))
-ids = {}
-for id_dict in dict_list:
-    id_str = id_dict["_id"]
+informationmodel_list = list(db.informationmodel.find({}, {"_id": 1, "fdkId": 1, "issued": 1, "modified": 1}))
+catalog_list = list(db.catalog.find({}, {"_id": 1, "fdkId": 1, "issued": 1, "modified": 1}))
 
-    if "https://altinn-model-publisher.digdir.no/" in id_str:
-        id_str_mod = id_str.rpartition('/')[2]
-        id_str_mod_getting_there = id_str_mod.partition('-')[0]
+with open(args.outputdirectory + 'mongo_infmodels.json', 'w', encoding="utf-8") as outfile:
+    json.dump(informationmodel_list, outfile, ensure_ascii=False, indent=4)
 
-        uriArray = ids.get(id_str_mod_getting_there)
-        uriArray = uriArray if uriArray else []
-        uriArray.append(id_str)
-        ids[id_str_mod_getting_there] = uriArray
-    else:
-        ids[id_str] = id_str
-
-with open(args.outputdirectory + 'mongo_infmodels_id.json', 'w', encoding="utf-8") as outfile:
-    json.dump(ids, outfile, ensure_ascii=False, indent=4)
+with open(args.outputdirectory + 'mongo_catalogs.json', 'w', encoding="utf-8") as outfile:
+    json.dump(catalog_list, outfile, ensure_ascii=False, indent=4)

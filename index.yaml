@@ -3,12 +3,12 @@ entries:
   fdk-informationmodel-harvester-etl:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-12-01T14:16:43.106467323+01:00"
+    created: "2021-02-04T11:50:42.877473185+01:00"
     description: Config for FDK informationmodel harvester etl
-    digest: c25021728731e33ac8ab0fd9b57ae8d4b93366b5e50d9f6002dc71282605fc73
+    digest: 771ea36e11e263b8a9e21aef9a0cd1980a2b185db06c9a04fb62ca715c316e8d
     home: https://github.com/Informasjonsforvaltning/fdk-informationmodel-harvester-etl
     name: fdk-informationmodel-harvester-etl
     urls:
     - https://informasjonsforvaltning.github.io/fdk-informationmodel-harvester-etl/fdk-informationmodel-harvester-etl-0.1.0.tgz
     version: 0.1.0
-generated: "2020-12-01T14:16:43.104581847+01:00"
+generated: "2021-02-04T11:50:42.876424588+01:00"

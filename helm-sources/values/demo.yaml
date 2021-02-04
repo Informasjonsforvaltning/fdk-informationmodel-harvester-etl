@@ -1,4 +1,2 @@
 #DValues for demo environment
 NAMESPACE: demo
-ELASTIC_IMCAT_INDEX: imcat_v1
-ELASTIC_IMCATENH_INDEX: imcatenh_v2
