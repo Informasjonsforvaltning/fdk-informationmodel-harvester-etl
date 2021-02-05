@@ -3,7 +3,7 @@ name: Build and deploy to staging on push
 on:
   push:
     branches:
-      - never
+      - chore/hos/move_metadata
 
 jobs:
   build-and-deploy:
