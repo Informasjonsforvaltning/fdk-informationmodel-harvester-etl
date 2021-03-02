@@ -3,7 +3,7 @@ name: Build and deploy to demo when merged to master
 on:
   push:
     branches:
-      - no
+      - chore/hos/move_metadata
 
 jobs:
   build-and-deploy:
@@ -30,7 +30,7 @@ jobs:
       run: docker build . -t eu.gcr.io/digdir-fdk-infra/fdk-informationmodel-harvester-etl:demo_latest -t eu.gcr.io/digdir-fdk-infra/fdk-informationmodel-harvester-etl:$GITHUB_SHA
 
     - name: Publish docker image to Google Cloud
-      run: docker -- push eu.gcr.io/digdir-fdk-infra/fdk-informationmodel-harvester-etl
+      run: docker -- push eu.gcr.io/digdir-fdk-infra/fdk-informationmodel-harvester-etl -a
 
     - name: Apply Helm template
       run: |
