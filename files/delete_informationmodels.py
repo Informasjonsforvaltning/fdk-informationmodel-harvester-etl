@@ -22,9 +22,9 @@ def transform(inputfile, infmodels):
     output = {}
     for filename in filenames:
         files.append(db.fs.files.find({"filename": f"{filename}"}, {"_id": 1}))
-    print(str(files))
 
     for gridfsid in files:
+        print(str(gridfsid))
         output[str(gridfsid) + "-chunks"] = db.fs.chunks.remove(gridfsid)
         output[str(gridfsid) + "-files"] = db.fs.files.remove(gridfsid)
 
