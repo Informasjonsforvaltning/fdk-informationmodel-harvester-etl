@@ -10,10 +10,18 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-o', '--outputdirectory', help="the path to the directory of the output files", required=True)
 args = parser.parse_args()
 namespace = os.environ['NAMESPACE']
+staging_catalogs = [{"_id": "https://www.altinn.no/models/altinn", "fdkId": "f27930d7-8070-3d12-b4c7-e6aae22a478f"},
+                    {"_id": "https://www.altinn.no/models/or", "fdkId": "73925a02-21a0-3ad9-948c-ac017299ec22"},
+                    {"_id": "https://www.altinn.no/models/seres", "fdkId": "c62b1bd8-17a1-3724-9d00-db020a2025b8"}]
+other_catalogs = [{"_id": "https://www.altinn.no/models/catalog", "fdkId": "30251da7-e78f-33e5-9249-375451c9b187"}]
 connection = MongoClient(
     f"""mongodb://{os.environ['MONGO_USERNAME']}:{os.environ['MONGO_PASSWORD']}@mongodb:27017/informationModelHarvester?authSource=admin&authMechanism=SCRAM-SHA-1""")
 db = connection.informationModelHarvester
 
+if namespace == "staging":
+    catalogs = staging_catalogs
+else:
+    catalogs = other_catalogs
 
 def transform(inputfile, infmodels):
     filenames = openfile(inputfile)
@@ -25,12 +33,17 @@ def transform(inputfile, infmodels):
 
     for gridfsid in files:
         print(gridfsid)
-        output[gridfsid + "-chunks"] = db.fs.chunks.remove(gridfsid)
-        output[gridfsid + "-files"] = db.fs.files.remove(gridfsid)
+        output[gridfsid + "-chunks"] = db.fs.chunks.delete_one({"_id": gridfsid})
+        output[gridfsid + "-files"] = db.fs.files.delete_one({"_id": gridfsid})
 
-    for models in inf_models:
-        model_id = inf_models[models]["_id"]
-        output[str(model_id) + "-model"] = db.informationModelsMeta.remove(model_id)
+    for model in inf_models:
+        model_id = model["_id"]
+        output[str(model_id) + "-model"] = db.informationModelMeta.delete_one({"_id": model_id})
+
+    for catalog in catalogs:
+        catalog_id = catalog["_id"]
+        output[str(catalog_id) + "-model"] = db.catalogMeta.delete_one({"_id": catalog_id})
+
     return output
 
 
