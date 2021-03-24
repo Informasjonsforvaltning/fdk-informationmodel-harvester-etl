@@ -37,7 +37,7 @@ infModelMeta_list = []
 for catalog in staging_catalogs:
     staging_fdkId = catalog["fdkId"]
     uri = get_part_of_uri(staging_fdkId)
-    infModelMeta_list.extend(list(db.informationmodelMeta.find({"isPartOf": f"{uri}"}, {"fdkId": 1})))
+    infModelMeta_list.extend(list(db.informationModelMeta.find({"isPartOf": f"{uri}"}, {"fdkId": 1})))
 
 with open(args.outputdirectory + 'infmodelsMeta.json', 'w', encoding="utf-8") as outfile:
     json.dump(infModelMeta_list, outfile, ensure_ascii=False, indent=4)

@@ -7,7 +7,8 @@ extract:
 
 transform:
 	echo "Transforming informationmodels...."
-	python3 -u ./transform_informationmodels.py -o ./tmp/
+	python3 -u ./transform_informationmodels_to_filenames.py -o ./tmp/
+	python3 -u ./transform_filenames_to_gridfs_id.py -o ./tmp/
 
 delete:
 	echo "Deleting informationmodels...."
