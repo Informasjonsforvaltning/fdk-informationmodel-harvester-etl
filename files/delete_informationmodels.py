@@ -21,17 +21,17 @@ def transform(inputfile, infmodels):
     files = []
     output = {}
     for filename in filenames:
-        files.append(list(db.fs.files.find({"filename": f"{filename}"}, {"_id": 1})))
+        files.append(db.fs.files.find({"filename": f"{filename}"}, {"_id": 1}))
     print(str(files))
 
-    # for gridfsid in files:
-    #     output[str(gridfsid) + "-chunks"] = db.fs.chunks.remove(gridfsid)
-    #     output[str(gridfsid) + "-files"] = db.fs.files.remove(gridfsid)
-    #
-    # for models in inf_models:
-    #     model_id = inf_models[models]["_id"]
-    #     output[str(model_id) + "-model"] = db.informationModelsMeta.remove(model_id)
-    # return output
+    for gridfsid in files:
+        output[str(gridfsid) + "-chunks"] = db.fs.chunks.remove(gridfsid)
+        output[str(gridfsid) + "-files"] = db.fs.files.remove(gridfsid)
+
+    for models in inf_models:
+        model_id = inf_models[models]["_id"]
+        output[str(model_id) + "-model"] = db.informationModelsMeta.remove(model_id)
+    return output
 
 
 def openfile(file_name):
