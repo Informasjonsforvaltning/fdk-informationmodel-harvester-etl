@@ -33,18 +33,18 @@ def transform(inputfile, infmodels):
         files.append(db.fs.files.find_one({"filename": f"{filename}"}, {"_id": 1}))
 
     for gridfsid in files:
-        print(gridfsid)
-        output.append(db.fs.chunks.delete_one({"_id": gridfsid}))
-        output.append(db.fs.files.delete_one({"_id": gridfsid}))
+        output.append(db.fs.chunks.delete_one({"_id": gridfsid}).acknowlegded)
+        output.append(db.fs.files.delete_one({"_id": gridfsid}).acknowlegded)
 
     for model in inf_models:
         model_id = model["_id"]
-        output.append(db.informationModelMeta.delete_one({"_id": model_id}))
+        output.append(db.informationModelMeta.delete_one({"_id": model_id}).acknowlegded)
 
     for catalog in catalogs:
         catalog_id = catalog["_id"]
-        output.append(db.catalogMeta.delete_one({"_id": catalog_id}))
+        output.append(db.catalogMeta.delete_one({"_id": catalog_id}).acknowlegded)
 
+    print(output)
     return output
 
 
@@ -57,7 +57,5 @@ inputfileName = args.outputdirectory + "filenames.json"
 infModelsMeta = args.outputdirectory + "infmodelsMeta.json"
 outputfileName = args.outputdirectory + "deleted.json"
 
-
-# Transform the organization object to publisher format:
 with open(outputfileName, 'w', encoding="utf-8") as outfile:
     json.dump(transform(inputfileName, infModelsMeta), outfile, ensure_ascii=False, indent=4)
