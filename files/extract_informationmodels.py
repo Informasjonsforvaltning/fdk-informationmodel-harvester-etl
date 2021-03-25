@@ -34,9 +34,9 @@ else:
     catalogs = other_catalogs
 
 infModelMeta_list = []
-for catalog in staging_catalogs:
-    staging_fdkId = catalog["fdkId"]
-    uri = get_part_of_uri(staging_fdkId)
+for catalog in catalogs:
+    catalog_fdkId = catalog["fdkId"]
+    uri = get_part_of_uri(catalog_fdkId)
     infModelMeta_list.extend(list(db.informationModelMeta.find({"isPartOf": f'{uri}'}, {"fdkId": 1})))
 
 with open(args.outputdirectory + 'infmodelsMeta.json', 'w', encoding="utf-8") as outfile:
