@@ -4,6 +4,7 @@ import argparse
 from pymongo import MongoClient
 import gridfs
 import os
+import bson
 
 
 parser = argparse.ArgumentParser()
@@ -33,18 +34,17 @@ def transform(inputfile, infmodels):
         files.append(db.fs.files.find_one({"filename": f"{filename}"}, {"_id": 1}))
 
     for gridfsid in files:
-        output.append(db.fs.chunks.delete_one({"_id": gridfsid}).acknowlegded)
-        output.append(db.fs.files.delete_one({"_id": gridfsid}).acknowlegded)
+        output.append(db.fs.chunks.delete_one({"files_id": gridfsid['_id']}).raw_result)
+        output.append(db.fs.files.delete_one({"_id": gridfsid['_id']}).raw_result)
 
     for model in inf_models:
         model_id = model["_id"]
-        output.append(db.informationModelMeta.delete_one({"_id": model_id}).acknowlegded)
+        output.append(db.informationModelMeta.delete_one({"_id": model_id}).raw_result)
 
     for catalog in catalogs:
         catalog_id = catalog["_id"]
-        output.append(db.catalogMeta.delete_one({"_id": catalog_id}).acknowlegded)
+        output.append(db.catalogMeta.delete_one({"_id": catalog_id}).raw_result)
 
-    print(output)
     return output
 
 
