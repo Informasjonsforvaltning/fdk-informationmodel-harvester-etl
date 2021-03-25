@@ -23,26 +23,27 @@ if namespace == "staging":
 else:
     catalogs = other_catalogs
 
+
 def transform(inputfile, infmodels):
     filenames = openfile(inputfile)
     inf_models = openfile(infmodels)
     files = []
-    output = {}
+    output = []
     for filename in filenames:
-        files.append(db.fs.files.find({"filename": f"{filename}"}, {"_id": 1}))
+        files.append(db.fs.files.find_one({"filename": f"{filename}"}, {"_id": 1}))
 
     for gridfsid in files:
         print(gridfsid)
-        output[gridfsid + "-chunks"] = db.fs.chunks.delete_one({"_id": gridfsid})
-        output[gridfsid + "-files"] = db.fs.files.delete_one({"_id": gridfsid})
+        output.append(db.fs.chunks.delete_one({"_id": gridfsid}))
+        output.append(db.fs.files.delete_one({"_id": gridfsid}))
 
     for model in inf_models:
         model_id = model["_id"]
-        output[str(model_id) + "-model"] = db.informationModelMeta.delete_one({"_id": model_id})
+        output.append(db.informationModelMeta.delete_one({"_id": model_id}))
 
     for catalog in catalogs:
         catalog_id = catalog["_id"]
-        output[str(catalog_id) + "-model"] = db.catalogMeta.delete_one({"_id": catalog_id})
+        output.append(db.catalogMeta.delete_one({"_id": catalog_id}))
 
     return output
 
