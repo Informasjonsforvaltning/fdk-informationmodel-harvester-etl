@@ -6,7 +6,6 @@ from hashlib import sha1
 parser = argparse.ArgumentParser()
 parser.add_argument('-o', '--outputdirectory', help="the path to the directory of the output files", required=True)
 args = parser.parse_args()
-namespace = os.environ['NAMESPACE']
 
 
 def transform(inputfile):
@@ -14,9 +13,14 @@ def transform(inputfile):
     transformed_models = {}
 
     for model_id in info_models:
+        print("Model id: " + model_id)
         new_id = create_hash(model_id)
+        print("New id: " + new_id)
+
         for other_id in info_models:
+            print("Other id: " + other_id)
             if new_id in other_id:
+                print("If new_id in other_id statement hits")
                 transformed_models[other_id] = transform_model(info_models[model_id], info_models[other_id])
     return transformed_models
 
