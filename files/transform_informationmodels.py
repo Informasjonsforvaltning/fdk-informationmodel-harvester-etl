@@ -1,6 +1,5 @@
 import json
 import argparse
-import os
 from hashlib import sha1
 
 parser = argparse.ArgumentParser()
@@ -14,9 +13,8 @@ def transform(inputfile):
 
     for model_id in info_models:
         new_id = create_hash(model_id)
-
+        print("New id: " + new_id)
         for other_id in info_models:
-            print("Other id: " + other_id)
             if new_id in other_id:
                 transformed_models[other_id] = transform_model(info_models[model_id], info_models[other_id])
     return transformed_models
@@ -35,7 +33,6 @@ def openfile(file_name):
 
 def create_hash(old_id):
     print("Old id: " + old_id)
-    print("New id: " + sha1(bytes(old_id, encoding="utf-8")).hexdigest())
     return sha1(bytes(old_id, encoding="utf-8")).hexdigest()
 
 
