@@ -1,4 +1,4 @@
-name: Build and deploy to prod when merged to master
+name: Build and deploy to prod on push
 
 on:
   push:
@@ -27,14 +27,19 @@ jobs:
     - run: gcloud auth configure-docker eu.gcr.io
 
     - name: Build Docker image with GitHub commit sha tag and latest tag
-      run: docker build . -t eu.gcr.io/digdir-fdk-infra/fdk-informationmodel-harvester-etl:latest -t eu.gcr.io/digdir-fdk-infra/fdk-informationmodel-harvester-etl:$GITHUB_SHA
+      run: docker build . \
+      -t eu.gcr.io/digdir-fdk-infra/fdk-informationmodel-harvester-etl:latest \
+      -t eu.gcr.io/digdir-fdk-infra/fdk-informationmodel-harvester-etl:$GITHUB_SHA
 
     - name: Publish docker image to Google Cloud
       run: docker -- push eu.gcr.io/digdir-fdk-infra/fdk-informationmodel-harvester-etl -a
 
     - name: Apply Helm template
       run: |
-        helm template --set DOCKER_IMAGE_NAME="eu.gcr.io/digdir-fdk-infra/fdk-informationmodel-harvester-etl:$GITHUB_SHA" -f ./helm-sources/values/prod.yaml ./helm-sources/ > ./kubectlapply.yaml
+        helm template \
+        --set DOCKER_IMAGE_NAME="eu.gcr.io/digdir-fdk-infra/fdk-informationmodel-harvester-etl:$GITHUB_SHA" \
+        -f ./helm-sources/values/prod.yaml \
+        ./helm-sources/ > ./kubectlapply.yaml
         chmod o+w ./kubectlapply.yaml
         cat kubectlapply.yaml
 
