@@ -3,7 +3,7 @@ name: Build and deploy to prod when merged to master
 on:
   push:
     branches:
-      - chore/hos/remove-altinn-ETL
+      - no
 
 jobs:
   build-and-deploy:
