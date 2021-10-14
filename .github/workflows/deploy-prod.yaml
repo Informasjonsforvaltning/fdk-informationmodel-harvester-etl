@@ -27,8 +27,7 @@ jobs:
     - run: gcloud auth configure-docker eu.gcr.io
 
     - name: Build Docker image with GitHub commit sha tag and latest tag
-      run: docker build . \
-      -t eu.gcr.io/digdir-fdk-infra/fdk-informationmodel-harvester-etl:latest -t eu.gcr.io/digdir-fdk-infra/fdk-informationmodel-harvester-etl:$GITHUB_SHA
+      run: docker build . -t eu.gcr.io/digdir-fdk-infra/fdk-informationmodel-harvester-etl:latest -t eu.gcr.io/digdir-fdk-infra/fdk-informationmodel-harvester-etl:$GITHUB_SHA
 
     - name: Publish docker image to Google Cloud
       run: docker -- push eu.gcr.io/digdir-fdk-infra/fdk-informationmodel-harvester-etl -a
