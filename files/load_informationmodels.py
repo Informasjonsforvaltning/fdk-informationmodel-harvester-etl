@@ -39,8 +39,8 @@ for mongo_id in transformed_json:
         total_failed += 1
         print("Update failed: " + mongo_id)
         fail_log[mongo_id] = mongo_id
-print("Total number of records updated: " + str(total_updated))
-print("Total number of record updates failed: " + str(total_failed))
+print("Total number of info-models updated: " + str(total_updated))
+print("Total number of info-models updates failed: " + str(total_failed))
 with open(args.outputdirectory + "load_errors.json", 'w', encoding="utf-8") as err_file:
     json.dump(fail_log, err_file, ensure_ascii=False, indent=4)
 
@@ -51,14 +51,14 @@ fail_log = {}
 for mongo_id in delete_json:
     print("Deleting ID: " + mongo_id)
     delete_result = db.informationModelMeta.delete_one({"_id": mongo_id})
-    if delete_result["acknowledged"]:
+    if delete_result.deleted_count > 0:
         total_deleted += 1
         print("Successfully deleted: " + mongo_id)
     else:
         total_failed += 1
         print("Delete failed: " + mongo_id)
         fail_log[mongo_id] = mongo_id
-print("Total number of records updated: " + str(total_updated))
-print("Total number of record updates failed: " + str(total_failed))
+print("Total number of info-models deleted: " + str(total_deleted))
+print("Total number of info-models deletes failed: " + str(total_failed))
 with open(args.outputdirectory + "delete_errors.json", 'w', encoding="utf-8") as err_file:
     json.dump(fail_log, err_file, ensure_ascii=False, indent=4)
