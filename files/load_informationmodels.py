@@ -31,7 +31,7 @@ fail_log = {}
 for mongo_id in transformed_json:
     to_be_updated = transformed_json[mongo_id]
     print("Updating ID: " + mongo_id)
-    update_result = db.informationModelMeta.find_one_and_update(to_be_updated)
+    update_result = db.informationModelMeta.find_one_and_update({'_id': mongo_id}, {'$set': to_be_updated})
     if update_result:
         total_updated += 1
         print("Successfully updated: " + mongo_id)
