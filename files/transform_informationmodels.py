@@ -14,14 +14,14 @@ old_models_filename = args.outputdirectory + "old_models.json"
 def transform(inputfile):
     info_models = openfile(inputfile)
     transformed_models = {}
-    old_models = {}
+    old_models = []
     for model_id in info_models:
         new_id = create_hash(model_id)
         print("New id: " + new_id)
         for other_id in info_models:
             if new_id in other_id:
                 transformed_models[other_id] = transform_model(info_models[model_id], info_models[other_id])
-                old_models[model_id] = info_models[model_id]
+                old_models.append(model_id)
     with open(old_models_filename, 'w', encoding="utf-8") as old_models_file:
         json.dump(old_models, old_models_file, ensure_ascii=False, indent=4)
     return transformed_models
