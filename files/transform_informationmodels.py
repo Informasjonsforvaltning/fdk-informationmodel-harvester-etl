@@ -21,10 +21,11 @@ def transform(inputfile):
     for endpoint_description in dataservices:
         old_id = create_dataservice_id(endpoint_description)
         new_id = create_dataservice_id(f'{dataservices[endpoint_description]} {endpoint_description}')
-        old_meta = info_models[old_id]
-        new_meta = info_models[new_id]
-        old_models.append(old_id)
-        transformed_models[new_id] = transform_model(old_meta, new_meta)
+        old_meta = info_models.get(old_id)
+        new_meta = info_models.get(new_id)
+        if old_meta and new_meta:
+            old_models.append(old_id)
+            transformed_models[new_id] = transform_model(old_meta, new_meta)
     with open(old_models_filename, 'w', encoding="utf-8") as old_models_file:
         json.dump(old_models, old_models_file, ensure_ascii=False, indent=4)
     return transformed_models

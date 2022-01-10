@@ -14,11 +14,11 @@ headers = {"Accept": "text/turtle"}
 dataservice_rdf = requests.get(reasoning_uri, headers=headers).text
 dataservices = fdk_rdf_parser.parse_data_services(dataservice_rdf)
 
-filtered = {}
+filtered = dict()
 for service in dataservices:
-    endpointDescription = dataservices[service].endpointDescription
-    if endpointDescription:
-        filtered[endpointDescription] = service
+    endpointDescriptions = dataservices[service].endpointDescription
+    if endpointDescriptions and len(endpointDescriptions) > 0:
+        filtered[endpointDescriptions[0]] = service
 print("Total number of dataservices: " + str(len(dataservices)))
 print("Total number of extracted dataservices: " + str(len(filtered)))
 
