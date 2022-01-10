@@ -16,7 +16,9 @@ dataservices = fdk_rdf_parser.parse_data_services(dataservice_rdf)
 
 filtered = {}
 for service in dataservices:
-    filtered[dataservices[service].endpointDescription] = service
+    endpointDescription = dataservices[service].endpointDescription
+    if endpointDescription:
+        filtered[endpointDescription] = service
 print("Total number of dataservices: " + str(len(dataservices)))
 print("Total number of extracted dataservices: " + str(len(filtered)))
 
