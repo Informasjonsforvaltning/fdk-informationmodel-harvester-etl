@@ -21,6 +21,8 @@ def transform(inputfile):
     for endpoint_description in dataservices:
         old_id = create_dataservice_id(endpoint_description)
         new_id = create_dataservice_id(f'{dataservices[endpoint_description]} {endpoint_description}')
+        print("Old_id: " + str(old_id))
+        print("New_id: " + str(new_id))
         old_meta = info_models.get(old_id)
         new_meta = info_models.get(new_id)
         if old_meta and new_meta:
