@@ -18,7 +18,7 @@ filtered = dict()
 for service in dataservices:
     endpointDescriptions = dataservices[service].endpointDescription
     if endpointDescriptions and len(endpointDescriptions) > 0:
-        filtered[endpointDescriptions[0]] = service
+        filtered[list(endpointDescriptions)[0]] = service
 print("Total number of dataservices: " + str(len(dataservices)))
 print("Total number of extracted dataservices: " + str(len(filtered)))
 
