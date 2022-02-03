@@ -28,7 +28,7 @@ def transform(inputfile):
             transformed_models[new_id] = transform_model(old_meta, new_meta)
             print("Transforming ||| new id: " + str(new_id) + ", old_id: " + str(old_id))
         elif old_meta:
-            print("Missing new meta | new_id: " + str(old_id))
+            print("Missing new meta | old_id: " + str(old_id))
         elif new_meta:
             print("Missing old meta | new_id: " + str(new_id))
     with open(old_models_filename, 'w', encoding="utf-8") as old_models_file:

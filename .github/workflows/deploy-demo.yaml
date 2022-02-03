@@ -3,7 +3,7 @@ name: Build and deploy to demo on push
 on:
   push:
     branches:
-      - no
+      - chore/hos/new-id-fdk-model-publisher-ETL
 
 jobs:
   build-and-deploy:
